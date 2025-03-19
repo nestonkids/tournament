@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>トーナメント</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="greeting"></div>
+
+    <!-- トーナメントの参加者の名前を入力するフォーム -->
+    <form id="contactForm">
+        <label for="name">名前：</label>
+        <input type="text" id="name" name="name" required>
+        <button type="submit">参加</button>
+    </form>
+
+    <!-- トーナメント表を表示する場所 -->
+     <button onclick="fillRoundZeroPlayers()">test</button>
+    <div id="bracket"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
