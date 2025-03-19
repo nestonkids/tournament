@@ -1,0 +1,77 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f8f8;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    text-align: center;
+}
+
+#contactForm {
+    text-align: center;
+    margin: 20px;
+}
+
+#name {
+    margin-right: 10px;
+}
+
+#bracket {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.tournament-level {
+    margin: 20px;
+}
+
+.matchup {
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.matchup span {
+    margin: 0 10px;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 5px 15px;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+input[type="text"] {
+    padding: 5px;
+    margin-right: 10px;
+    border-radius: 5px;
+}
+
+input[type="text"]:focus {
+    outline: none;
+    border: 2px solid #4CAF50;
+}
+
+.shuffle-button {
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    padding: 5px 15px;
+    margin: 10px 0;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.shuffle-button:hover {
+    background-color: #0b7dda;
+}
