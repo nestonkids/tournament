@@ -8,7 +8,6 @@ let winners = [[]]; // 各ラウンドの勝者を保存する配列
 
 // レベル0のプレイヤーをシャッフルする関数
 function shufflePlayers() {
-    // 現在のトーナメントデータから選手を取得しシャッフル
     const players = tournamentData.flat().filter(player => player); // 空欄を除外した選手リストを作成
     for (let i = players.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -31,9 +30,17 @@ function renderBracket() {
     const levels = 4; // トーナメントのラウンド数
     const matchesPerLevel = 2 ** (levels - 1); // 初期試合数（レベル0）
 
+    // ラウンド名
+    const roundNames = ['1回戦', '2回戦', '準決勝', '決勝'];
+
     for (let i = 0; i < levels; i++) {
         const levelDiv = document.createElement('div');
         levelDiv.className = 'tournament-level'; // 各ラウンド用のデザイン
+
+        // ラウンド名を表示
+        const roundTitle = document.createElement('h3');
+        roundTitle.textContent = roundNames[i];
+        levelDiv.appendChild(roundTitle);
 
         // レベル0にシャッフルボタンを追加
         if (i === 0) {
@@ -71,35 +78,28 @@ function renderBracket() {
             levelDiv.appendChild(matchupDiv); // ラウンドに試合を追加
         }
 
-        // ラウンド2以降の選手数の制限を設定（4人まで）
-        if (i === 2) {
-            winners[i] = winners[i] || [];
-            winners[i] = winners[i].slice(0, 4); // 選手数を最大4人に制限
-        }
-
-        // 次のラウンドの空配列を準備
         if (i < levels - 1 && !winners[i]) {
-            winners[i] = new Array(matchesPerLevel / 2 ** (i + 1)).fill(['', '']);
+            winners[i] = []; // 空の配列を初期化
+
+            for (let j = 0; j < matchesPerLevel / 2 ** (i + 1); j++) {
+                winners[i].push(['', '']); // 独立した空の配列 ['',''] を追加
+            }
         }
 
         bracket.appendChild(levelDiv); // 全体にラウンドを追加
     }
+
+    console.log(winners);
 }
 
 // 勝者を選択する関数
 function selectWinner(level, matchIndex, playerIndex) {
-    console.log(level);
-    console.log(matchIndex);
-    console.log(playerIndex);
     // 選択されたプレイヤーを取得
     const selectedPlayer = (level === 0 ? tournamentData : winners[level - 1])[matchIndex][playerIndex];
 
     if (selectedPlayer) {
-        // 次のラウンドのインデックスを計算
         const nextLevelIndex = Math.floor(matchIndex / 2);
-        console.log(nextLevelIndex);
 
-        // 次のラウンドのデータがまだ無い場合に準備
         if (!winners[level]) {
             const size = Math.ceil(tournamentData.length / 2 ** (level + 1));
             winners[level] = [];
@@ -111,22 +111,21 @@ function selectWinner(level, matchIndex, playerIndex) {
         // 勝者を次のラウンドに追加
         winners[level][nextLevelIndex] = winners[level][nextLevelIndex] || ['', ''];
 
-        // 適切なスロット（0または1）に勝者を割り当てる
         if (winners[level][nextLevelIndex][0] === '') {
             winners[level][nextLevelIndex][0] = selectedPlayer;
         } else if (winners[level][nextLevelIndex][1] === '') {
             winners[level][nextLevelIndex][1] = selectedPlayer;
-        } else {
-            console.error("Unexpected error: Both slots are already filled.");
+        }
+
+        // 優勝者が決定した場合
+        if (level === winners.length - 1 && nextLevelIndex === 0) {
+            const winnerDisplay = document.getElementById('winnerDisplay');
+            winnerDisplay.textContent = `優勝者: ${selectedPlayer}`;
         }
     }
 
-    // デバッグ用: 勝者リストを表示
-    console.log(winners);
-
     renderBracket(); // トーナメントを再描画
 }
-
 
 // フォーム送信イベントリスナー
 document.getElementById('contactForm').addEventListener('submit', function(event) {
@@ -160,6 +159,7 @@ document.getElementById('contactForm').addEventListener('submit', function(event
         greetingParagraph.textContent = `名前を入力してください。`; // 名前が空の場合のエラーメッセージ
     }
 });
+
 // レベル0のプレイヤーを全て埋める関数
 function fillRoundZeroPlayers() {
     const defaultPlayers = Array.from({ length: tournamentData.length * 2 }, (_, i) => `p ${i + 1}`);
